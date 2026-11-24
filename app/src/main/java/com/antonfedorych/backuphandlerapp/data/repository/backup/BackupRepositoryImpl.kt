@@ -52,10 +52,7 @@ class BackupRepositoryImpl(
                 delay(1.seconds) //demo
                 if (name.contains("fail_")) throw IOException("Simulated failure") //demo
 
-                copyFile(
-                    uri,
-                    File(backupDir, "${index}_$name")
-                )
+                copyFile(uri, File(backupDir, "${index}_$name"))
                 BackupStatus.Success
             } catch (e: Exception) {
                 BackupStatus.Failure(reason = e.message ?: e.javaClass.simpleName)
