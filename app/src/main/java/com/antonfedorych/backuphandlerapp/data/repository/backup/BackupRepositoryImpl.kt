@@ -1,4 +1,4 @@
-package com.antonfedorych.backuphandlerapp.data.repository
+package com.antonfedorych.backuphandlerapp.data.repository.backup
 
 import android.content.Context
 import android.net.Uri
@@ -36,13 +36,22 @@ class BackupRepositoryImpl(
 
         uris.forEachIndexed { index, uri ->
             val name = getFileName(uri) ?: "file_$index"
-            dao.insert(BackupItemEntity(id = index, fileName = name, status = BackupStatus.Loading.name))
+            dao.insert(
+                BackupItemEntity(
+                    id = index,
+                    fileName = name,
+                    status = BackupStatus.Loading.name
+                )
+            )
 
             val status = try {
                 delay(1.seconds) //demo
                 if (name.contains("fail_")) throw IOException("Simulated failure") //demo
 
-                copyFile(uri, File(backupDir, "${index}_$name")) // index prefix: same names in one batch do not overwrite each other
+                copyFile(
+                    uri,
+                    File(backupDir, "${index}_$name")
+                )
                 BackupStatus.Success
             } catch (e: Exception) {
                 BackupStatus.Failure

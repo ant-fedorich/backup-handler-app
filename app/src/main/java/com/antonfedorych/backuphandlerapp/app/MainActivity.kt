@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
 import com.antonfedorych.backuphandlerapp.data.local.AppDatabase
-import com.antonfedorych.backuphandlerapp.data.repository.BackupRepositoryImpl
+import com.antonfedorych.backuphandlerapp.data.repository.backup.BackupRepositoryImpl
 import com.antonfedorych.backuphandlerapp.ui.backuplist.BackupListScreen
 import com.antonfedorych.backuphandlerapp.ui.backuplist.BackupListViewModel
 import com.antonfedorych.backuphandlerapp.ui.common.theme.BackupHandlerAppTheme
