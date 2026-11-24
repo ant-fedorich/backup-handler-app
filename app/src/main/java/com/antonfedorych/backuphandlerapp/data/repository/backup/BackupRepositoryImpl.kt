@@ -34,15 +34,19 @@ class BackupRepositoryImpl(
 
         dao.deleteAll()
 
-        uris.forEachIndexed { index, uri ->
-            val name = getFileName(uri) ?: "file_$index"
-            dao.insert(
-                BackupItemEntity(
-                    id = index,
-                    fileName = name,
-                    status = BackupStatus.Loading.name
-                )
+        val items = uris.mapIndexed { index, uri ->
+            BackupItemEntity(
+                id = index,
+                fileName = getFileName(uri) ?: "file_$index",
+                status = BackupStatus.Pending.name,
             )
+        }
+        dao.insertAll(items)
+
+        items.forEachIndexed { index, item ->
+            val uri = uris[index]
+            val name = item.fileName
+            dao.insert(item.copy(status = BackupStatus.Loading.name))
 
             val status = try {
                 delay(1.seconds) //demo
@@ -56,7 +60,7 @@ class BackupRepositoryImpl(
             } catch (e: Exception) {
                 BackupStatus.Failure
             }
-            dao.insert(BackupItemEntity(id = index, fileName = name, status = status.name))
+            dao.insert(item.copy(status = status.name))
         }
     }
 

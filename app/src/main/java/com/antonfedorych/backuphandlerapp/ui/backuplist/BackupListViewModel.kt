@@ -18,7 +18,9 @@ class BackupListViewModel(
         .map { items ->
             BackupListState(
                 items = items,
-                isCopying = items.any { it.status == BackupStatus.Loading },
+                isCopying = items.any {
+                    it.status == BackupStatus.Pending || it.status == BackupStatus.Loading
+                },
             )
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), BackupListState())
