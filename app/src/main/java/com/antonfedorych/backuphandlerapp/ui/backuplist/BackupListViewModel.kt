@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class BackupListViewModel : ViewModel() {
-    private val _state = MutableStateFlow(BackupListUiState(items = sampleBackupItems))
-    val state: StateFlow<BackupListUiState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(BackupListState(items = sampleBackupItems))
+    val state: StateFlow<BackupListState> = _state.asStateFlow()
 
-    fun onEvent(event: BackupListUiEvent) {
+    fun onEvent(event: BackupListEvent) {
         when (event) {
-            is BackupListUiEvent.FilesSelected -> Unit // Copying comes in a later step.
+            is BackupListEvent.FilesSelected -> Unit // Copying comes in a later step.
         }
     }
 }
