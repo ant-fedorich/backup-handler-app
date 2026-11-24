@@ -1,17 +1,27 @@
 package com.antonfedorych.backuphandlerapp.ui.backuplist
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.lifecycle.viewModelScope
+import com.antonfedorych.backuphandlerapp.domain.repository.BackupRepository
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class BackupListViewModel : ViewModel() {
-    private val _state = MutableStateFlow(BackupListState(items = sampleBackupItems))
-    val state: StateFlow<BackupListState> = _state.asStateFlow()
+class BackupListViewModel(
+    private val repository: BackupRepository,
+) : ViewModel() {
+
+    val state: StateFlow<BackupListState> = repository.observeItems()
+        .map { items -> BackupListState(items = items) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), BackupListState())
 
     fun onEvent(event: BackupListEvent) {
         when (event) {
-            is BackupListEvent.FilesSelected -> Unit // Copying comes in a later step.
+            is BackupListEvent.FilesSelected -> viewModelScope.launch {
+                repository.startBackup(event.uris)
+            }
         }
     }
 }

@@ -17,15 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.antonfedorych.backuphandlerapp.domain.model.BackupItem
 import com.antonfedorych.backuphandlerapp.domain.model.enums.BackupStatus
 import com.antonfedorych.backuphandlerapp.ui.common.theme.BackupHandlerAppTheme
 
 @Composable
 fun BackupListScreen(
+    viewModel: BackupListViewModel,
     modifier: Modifier = Modifier,
-    viewModel: BackupListViewModel = viewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
