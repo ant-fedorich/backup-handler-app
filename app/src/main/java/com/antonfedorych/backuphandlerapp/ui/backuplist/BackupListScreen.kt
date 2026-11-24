@@ -61,7 +61,9 @@ fun BackupListContent(
             items(state.items, key = { it.id }) { item ->
                 ListItem(
                     headlineContent = { Text(item.fileName) },
-                    trailingContent = { Text(item.status.name) },
+                    trailingContent = {
+                        Text(text = item.status.name, color = item.status.color)
+                    },
                 )
                 HorizontalDivider()
             }

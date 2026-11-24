@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Room
+import com.antonfedorych.backuphandlerapp.data.local.AppDatabase
 import com.antonfedorych.backuphandlerapp.data.repository.BackupRepositoryImpl
 import com.antonfedorych.backuphandlerapp.ui.backuplist.BackupListScreen
 import com.antonfedorych.backuphandlerapp.ui.backuplist.BackupListViewModel
@@ -18,10 +20,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val database = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "backup.db",
+        ).build()
+
         setContent {
             val viewModel = viewModel {
                 BackupListViewModel(
-                    BackupRepositoryImpl(applicationContext)
+                    BackupRepositoryImpl(applicationContext, database.backupDao())
                 )
             }
 

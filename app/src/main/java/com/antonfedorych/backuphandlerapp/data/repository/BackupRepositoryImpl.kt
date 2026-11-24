@@ -3,37 +3,45 @@ package com.antonfedorych.backuphandlerapp.data.repository
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import com.antonfedorych.backuphandlerapp.data.local.BackupDao
+import com.antonfedorych.backuphandlerapp.data.local.entity.BackupItemEntity
+import com.antonfedorych.backuphandlerapp.data.local.mapper.toBackupItemEntity
+import com.antonfedorych.backuphandlerapp.data.local.mapper.toBackupItems
 import com.antonfedorych.backuphandlerapp.domain.model.BackupItem
 import com.antonfedorych.backuphandlerapp.domain.model.enums.BackupStatus
 import com.antonfedorych.backuphandlerapp.domain.repository.BackupRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import kotlin.time.Duration.Companion.seconds
 
 class BackupRepositoryImpl(
     context: Context,
+    private val dao: BackupDao,
 ) : BackupRepository {
     private val contentResolver = context.contentResolver
     private val backupDir = File(context.filesDir, "backups")
 
-    private val _items = MutableStateFlow<List<BackupItem>>(emptyList())
-
-    override fun observeItems(): Flow<List<BackupItem>> = _items.asStateFlow()
+    override fun observeItems(): Flow<List<BackupItem>> =
+        dao.observeAll().map { it.toBackupItems() }
 
     override suspend fun startBackup(uris: List<Uri>) = withContext(Dispatchers.IO) {
         backupDir.mkdirs()
 
-        _items.value = emptyList()
+        dao.deleteAll()
 
         uris.forEachIndexed { index, uri ->
             val name = getFileName(uri) ?: "file_$index"
+            dao.insert(BackupItemEntity(id = index, fileName = name, status = BackupStatus.Loading.name))
 
             val status = try {
+                delay(1.seconds)
+
                 if (name.contains("fail_")) throw IOException("Simulated failure") //demo
 
                 copyFile(uri, File(backupDir, name))
@@ -41,7 +49,7 @@ class BackupRepositoryImpl(
             } catch (e: Exception) {
                 BackupStatus.Failure
             }
-            _items.value += BackupItem(id = index.toLong(), fileName = name, status = status)
+            dao.insert(BackupItemEntity(id = index, fileName = name, status = status.name))
         }
     }
 
