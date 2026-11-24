@@ -1,4 +1,4 @@
-package com.antonfedorych.backuphandlerapp.ui.theme
+package com.antonfedorych.backuphandlerapp.ui.common.theme
 
 import android.app.Activity
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.antonfedorych.backuphandlerapp
+package com.antonfedorych.backuphandlerapp.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.antonfedorych.backuphandlerapp.ui.theme.BackupHandlerAppTheme
+import com.antonfedorych.backuphandlerapp.ui.common.theme.BackupHandlerAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

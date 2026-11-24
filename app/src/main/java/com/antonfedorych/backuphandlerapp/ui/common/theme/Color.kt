@@ -1,4 +1,4 @@
-package com.antonfedorych.backuphandlerapp.ui.theme
+package com.antonfedorych.backuphandlerapp.ui.common.theme
 
 import androidx.compose.ui.graphics.Color
 
