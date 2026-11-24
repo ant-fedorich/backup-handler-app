@@ -58,26 +58,46 @@ class BackupRepositoryImpl(
                 )
                 BackupStatus.Success
             } catch (e: Exception) {
-                BackupStatus.Failure
+                BackupStatus.Failure(reason = e.message ?: e.javaClass.simpleName)
             }
-            dao.insert(item.copy(status = status.name))
+            dao.insert(
+                item.copy(
+                    status = status.name,
+                    failureReason = (status as? BackupStatus.Failure)?.reason,
+                )
+            )
         }
     }
 
-    override suspend fun markInterruptedBackup() = dao.markLoadingAsInterrupted()
+    override suspend fun markInterruptedBackup() = withContext(Dispatchers.IO) {
+        dao.markLoadingAsInterrupted()
+        backupDir.listFiles { file -> file.name.endsWith(".part") }?.forEach { it.delete() } //for process kill
+        Unit
+    }
 
     private fun getFileName(uri: Uri): String? =
         contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
             ?.use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
 
     private fun copyFile(source: Uri, destination: File) {
-        val inputInput = contentResolver.openInputStream(source)
-            ?: throw FileNotFoundException("Cannot open $source")
+        val partFile = File(destination.parentFile, "${destination.name}.part")
 
-        inputInput.use { input ->
-            destination.outputStream().use { output ->
-                input.copyTo(output)
+        try {
+            val inputInput = contentResolver.openInputStream(source)
+                ?: throw FileNotFoundException("Cannot open $source")
+
+            inputInput.use { input ->
+                partFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
             }
+
+            if (!partFile.renameTo(destination)) {
+                throw IOException("Cannot rename ${partFile.name}")
+            }
+        } catch (e: Throwable) {
+            partFile.delete()
+            throw e
         }
     }
 }

@@ -6,7 +6,7 @@ import com.antonfedorych.backuphandlerapp.data.local.entity.BackupItemEntity
 
 @Database(
     entities = [BackupItemEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {

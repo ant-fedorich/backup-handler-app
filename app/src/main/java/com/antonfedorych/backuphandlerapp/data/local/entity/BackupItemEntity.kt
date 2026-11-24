@@ -10,4 +10,6 @@ data class BackupItemEntity(
     @ColumnInfo(name = "file_name")
     val fileName: String,
     val status: String,
+    @ColumnInfo(name = "failure_reason")
+    val failureReason: String? = null,
 )

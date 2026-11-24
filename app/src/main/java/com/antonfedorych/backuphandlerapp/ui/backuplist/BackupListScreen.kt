@@ -95,7 +95,7 @@ private fun BackupListContentPreview() {
 
 val sampleBackupItems = listOf(
     BackupItem(id = 1, fileName = "photo.jpg", status = BackupStatus.Success),
-    BackupItem(id = 2, fileName = "report.pdf", status = BackupStatus.Failure),
+    BackupItem(id = 2, fileName = "report.pdf", status = BackupStatus.Failure("Simulated failure")),
     BackupItem(id = 3, fileName = "notes.txt", status = BackupStatus.Loading),
     BackupItem(id = 4, fileName = "video.mp4", status = BackupStatus.Pending),
 )

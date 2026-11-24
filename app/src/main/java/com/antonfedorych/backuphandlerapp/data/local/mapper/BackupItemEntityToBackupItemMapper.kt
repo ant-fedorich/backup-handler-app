@@ -8,17 +8,17 @@ fun BackupItemEntity.toBackupItem(): BackupItem =
     BackupItem(
         id = id,
         fileName = fileName,
-        status = status.toBackupStatus(),
+        status = toBackupStatus(),
     )
 
 fun List<BackupItemEntity>.toBackupItems(): List<BackupItem> = map { it.toBackupItem() }
 
-private fun String.toBackupStatus(): BackupStatus =
-    when (this) {
+private fun BackupItemEntity.toBackupStatus(): BackupStatus =
+    when (status) {
         "Pending" -> BackupStatus.Pending
         "Loading" -> BackupStatus.Loading
         "Success" -> BackupStatus.Success
-        "Failure" -> BackupStatus.Failure
+        "Failure" -> BackupStatus.Failure(failureReason ?: "Unknown error")
         "Interrupted" -> BackupStatus.Interrupted
-        else -> throw IllegalArgumentException("Unknown backup status: $this")
+        else -> throw IllegalArgumentException("Unknown backup status: $status")
     }

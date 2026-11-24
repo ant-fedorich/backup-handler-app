@@ -25,7 +25,10 @@ class MainActivity : ComponentActivity() {
             applicationContext,
             AppDatabase::class.java,
             "backup.db",
-        ).build()
+        )
+            // No migrations yet: the schema changed during development.
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
 
         setContent {
             val viewModel = viewModel {
