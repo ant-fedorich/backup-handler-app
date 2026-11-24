@@ -19,5 +19,6 @@ private fun String.toBackupStatus(): BackupStatus =
         "Loading" -> BackupStatus.Loading
         "Success" -> BackupStatus.Success
         "Failure" -> BackupStatus.Failure
+        "Interrupted" -> BackupStatus.Interrupted
         else -> throw IllegalArgumentException("Unknown backup status: $this")
     }

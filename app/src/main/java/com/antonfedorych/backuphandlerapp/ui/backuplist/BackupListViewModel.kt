@@ -17,6 +17,10 @@ class BackupListViewModel(
         .map { items -> BackupListState(items = items) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), BackupListState())
 
+    init {
+        viewModelScope.launch { repository.markInterruptedBackup() }
+    }
+
     fun onEvent(event: BackupListEvent) {
         when (event) {
             is BackupListEvent.FilesSelected -> viewModelScope.launch {

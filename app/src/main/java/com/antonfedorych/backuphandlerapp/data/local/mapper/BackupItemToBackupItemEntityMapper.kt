@@ -17,4 +17,5 @@ private fun BackupStatus.toStatusString(): String =
         BackupStatus.Loading -> "Loading"
         BackupStatus.Success -> "Success"
         BackupStatus.Failure -> "Failure"
+        BackupStatus.Interrupted -> "Interrupted"
     }

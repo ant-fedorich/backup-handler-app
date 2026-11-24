@@ -8,4 +8,6 @@ interface BackupRepository {
     fun observeItems(): Flow<List<BackupItem>>
 
     suspend fun startBackup(uris: List<Uri>)
+
+    suspend fun markInterruptedBackup()
 }

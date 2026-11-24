@@ -15,6 +15,9 @@ interface BackupDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: BackupItemEntity)
 
+    @Query("UPDATE backup_items SET status = 'Interrupted' WHERE status = 'Loading'")
+    suspend fun markLoadingAsInterrupted()
+
     @Query("DELETE FROM backup_items")
     suspend fun deleteAll()
 }

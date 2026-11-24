@@ -5,7 +5,6 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import com.antonfedorych.backuphandlerapp.data.local.BackupDao
 import com.antonfedorych.backuphandlerapp.data.local.entity.BackupItemEntity
-import com.antonfedorych.backuphandlerapp.data.local.mapper.toBackupItemEntity
 import com.antonfedorych.backuphandlerapp.data.local.mapper.toBackupItems
 import com.antonfedorych.backuphandlerapp.domain.model.BackupItem
 import com.antonfedorych.backuphandlerapp.domain.model.enums.BackupStatus
@@ -40,8 +39,7 @@ class BackupRepositoryImpl(
             dao.insert(BackupItemEntity(id = index, fileName = name, status = BackupStatus.Loading.name))
 
             val status = try {
-                delay(1.seconds)
-
+                delay(5.seconds) //demo
                 if (name.contains("fail_")) throw IOException("Simulated failure") //demo
 
                 copyFile(uri, File(backupDir, name))
@@ -52,6 +50,8 @@ class BackupRepositoryImpl(
             dao.insert(BackupItemEntity(id = index, fileName = name, status = status.name))
         }
     }
+
+    override suspend fun markInterruptedBackup() = dao.markLoadingAsInterrupted()
 
     private fun getFileName(uri: Uri): String? =
         contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
