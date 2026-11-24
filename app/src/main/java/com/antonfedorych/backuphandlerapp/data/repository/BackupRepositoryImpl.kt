@@ -39,10 +39,10 @@ class BackupRepositoryImpl(
             dao.insert(BackupItemEntity(id = index, fileName = name, status = BackupStatus.Loading.name))
 
             val status = try {
-                delay(5.seconds) //demo
+                delay(1.seconds) //demo
                 if (name.contains("fail_")) throw IOException("Simulated failure") //demo
 
-                copyFile(uri, File(backupDir, name))
+                copyFile(uri, File(backupDir, "${index}_$name")) // index prefix: same names in one batch do not overwrite each other
                 BackupStatus.Success
             } catch (e: Exception) {
                 BackupStatus.Failure
