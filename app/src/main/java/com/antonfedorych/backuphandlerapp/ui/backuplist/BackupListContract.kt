@@ -5,6 +5,7 @@ import com.antonfedorych.backuphandlerapp.domain.model.BackupItem
 
 data class BackupListState(
     val items: List<BackupItem> = emptyList(),
+    val isCopying: Boolean = false,
 )
 
 sealed interface BackupListEvent {

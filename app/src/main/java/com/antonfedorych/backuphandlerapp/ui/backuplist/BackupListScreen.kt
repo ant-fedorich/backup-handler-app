@@ -71,6 +71,7 @@ fun BackupListContent(
 
         Button(
             onClick = onSelectFilesClick,
+            enabled = !state.isCopying,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
