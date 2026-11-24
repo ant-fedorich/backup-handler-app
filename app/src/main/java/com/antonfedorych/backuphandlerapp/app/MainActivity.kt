@@ -21,9 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel = viewModel {
                 BackupListViewModel(
-                    BackupRepositoryImpl(
-                        applicationContext.contentResolver
-                    )
+                    BackupRepositoryImpl(applicationContext)
                 )
             }
 
