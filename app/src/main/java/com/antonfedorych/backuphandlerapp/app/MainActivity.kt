@@ -10,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.antonfedorych.backuphandlerapp.ui.common.theme.BackupHandlerAppTheme
 import com.antonfedorych.backuphandlerapp.ui.backuplist.BackupListScreen
-import com.antonfedorych.backuphandlerapp.ui.backuplist.sampleBackupItems
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +19,6 @@ class MainActivity : ComponentActivity() {
             BackupHandlerAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     BackupListScreen(
-                        items = sampleBackupItems,
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
